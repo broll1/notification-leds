@@ -1,6 +1,10 @@
 var five = require('johnny-five'),
     PushBullet = require('pushbullet'),
     time = require('time'),
+    express = require('express'),
+    app = express(),
+    httpServer = require('http').createServer(app),
+    io = require('socket.io')(httpServer);
     Forecast = require('forecast'),
     colorMap = require('./leds/leds-colors.js'),
     keys = require('./keys.js');
@@ -21,13 +25,26 @@ var board = new five.Board(),
     var nightModeOveride = false;
     var lastIntensity = 0;
     var curIntensity = 0;
+    var curPos = 0;
+    var endPos = colorMap.rainbow.length;
+    var bVal = 2;
     var breatheMode = true;
+    var rainbowMode = true;
     var direction = "up";
-    var curColor = colorMap["cyan"];
-
+    var curColor = colorMap.color["cyan"];
+    var port = 3000;
     var prevState = {
         breatheMode : false,
+        rainbowMode : false,
     }
+
+app.use(express.static(__dirname + '/public'));
+
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/public/index.html');
+});
+
+httpServer.listen(port);
 
 now.setTimezone('America/New_York');
 
@@ -47,13 +64,10 @@ board.on("ready", function() {
 
     
     leds.on();
-    leds.color(colorMap['green']);
-
-
+    leds.color(colorMap.color['green']);
 
 ///////////////////////////////////////////////////////////////////////////////
-//
-//  stream events occur when pushbullet has been updated of a notification
+///  stream events occur when pushbullet has been updated of a notification
 //
 //
 //
@@ -65,6 +79,8 @@ board.on("ready", function() {
     stream.on('connect', function() {
         idleState(leds); 
         console.log('connected');
+        console.log(time.localtime(Date.now()/1000).hours);
+
     });
      
     stream.on('push', function(push) {
@@ -100,11 +116,14 @@ board.on("ready", function() {
     });
 
     stream.on('nop', function() {
-        idleState(leds);
+        if(!rainbowMode) {
+            idleState(leds);
+        }
     });
 
     stream.on('error', function() {
-        leds.color(colorMap["red"]);
+        leds.color(colorMap.color["red"]);
+        leds.strobe(100);
         console.log('error');
     });
 
@@ -131,6 +150,69 @@ board.on("ready", function() {
         leds.intensity(2);
     });*/
 
+    var count = 0;
+
+    io.on('connection', function (socket) {
+        //console.log(socket);
+
+        socket.on('nightMode:on', function(data) {
+            nightModeOveride = false;
+            leds.stop().off();
+            console.log('NightMode On Received');
+        });
+
+        socket.on('nightMode:off', function(data) {
+            nightModeOveride = true;
+            leds.on();
+            console.log('NightMode Off Received');
+        });
+
+        socket.on('breatheMode:on', function(data) {
+            breatheMode = true;
+            prevState.breatheMode = true;
+            rainbowMode = false;
+            prevState.rainbowMode = false;
+            console.log('breatheMode On Received');
+        });
+
+        socket.on('breatheMode:off', function(data) {
+            breatheMode = false;
+            prevState.breatheMode = false;
+            console.log('breatheMode Off Received');
+        });
+
+        socket.on('rainbowMode:on', function(data) {
+            rainbowMode = true;
+            prevState.rainbowMode = true;
+            breatheMode = false;
+            prevState.breatheMode = false;
+            console.log('rainbowMode On received')
+        });
+
+        socket.on('rainbowMode:off', function(data) {
+            rainbowMode = false;
+            prevState.rainbowMode = false;
+        });
+        
+        socket.on('bSlider', function(data) {
+            bVal = data;
+            leds.intensity(bVal);
+        });
+
+        socket.on('colorUpdate', function(data) {
+            if (data.clr != '#000000'){
+                curColor = data.clr;
+                leds.color(data.clr);
+            }
+            leds.intensity(bVal);
+        });
+
+        socket.on('error', function(err) {
+            console.log(err.stack);
+        });
+    });
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -155,28 +237,38 @@ board.on("ready", function() {
    setInterval(function() {
         if (breatheMode) {
             breathe(leds);
+        } else if (rainbowMode) {
+            rainbow(leds);
         }
     }, 90);
+
 
 });
 
 var idleState = function(leds) {
     breatheMode = prevState.breatheMode;
+    rainbowMode = prevState.rainBowMode;
     if (nightMode === true) {
+        console.log('sleepy time.. ZZZzzz..');
         leds.stop().off();
     } else {
         leds.stop();
-        leds.intensity(2);
+        if (breatheMode) {
+            leds.intensity(curIntensity);
+        } else {
+            leds.intensity(bVal);
+        }
         leds.color(curColor);
     } 
 }
 
 var notificationState = function(leds, color) {
     prevState.breatheMode = breatheMode;
+    prevState.rainbowMode = rainbowMode;
     breatheMode = false;
     leds.on();
     leds.intensity(100);
-    leds.color(colorMap[color]);
+    leds.color(colorMap.color[color]);
     leds.strobe(500);
 }
 
@@ -196,4 +288,13 @@ var breathe = function(leds) {
         lastIntensity = curIntensity;
         leds.intensity(curIntensity);
     }
+}
+
+var rainbow = function(leds) {
+        if (curPos >= endPos - 1) {
+            curPos = 0; // iterate to next color  
+        } else {
+            curPos++;
+        }
+        leds.color(colorMap.rainbow[curPos]);
 }
