@@ -78,20 +78,22 @@ exports.idleState = function(){
 };
 
 var breathe = function(){
-    if (lastIntensity >= bVal) {
-        direction = "down";
-    } else if (lastIntensity === 0) {
-        direction = "up";
-    }
+    if (bVal > 0) {
+        if (lastIntensity >= bVal) {
+            direction = "down";
+        } else if (lastIntensity <= 0) {
+            direction = "up";
+        }
 
-    if (direction === "up") {
-        curIntensity = lastIntensity + 1;
-        lastIntensity = curIntensity;
-        leds.intensity(curIntensity);
-    } else {
-        curIntensity = lastIntensity - 1;
-        lastIntensity = curIntensity;
-        leds.intensity(curIntensity);
+        if (direction === "up") {
+            curIntensity = lastIntensity + 1;
+            lastIntensity = curIntensity;
+            leds.intensity(curIntensity);
+        } else {
+            curIntensity = lastIntensity - 1;
+            lastIntensity = curIntensity;
+            leds.intensity(curIntensity);
+        }
     }
 };
 
