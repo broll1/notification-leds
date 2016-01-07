@@ -1,0 +1,28 @@
+{
+  "name": "lite_auto",
+  "description": "light automation",
+  "main": "outpost_controller.js",
+  "authors": [
+    "douglas"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/Flickdm/notification-leds",
+  "moduleType": [
+    "es6",
+    "node"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "angularjs#~1.4.8",
+    "socket.io-client": "~1.3.7",
+    "angular-socket-io": "~0.7.0",
+    "jquery": "~2.1.4"
+  }
+}
