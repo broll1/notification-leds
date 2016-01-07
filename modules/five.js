@@ -12,7 +12,6 @@ var prevState = {
 
 var curColor = colorMap.color["cyan"];
 var nightMode = false;
-var nightModeOveride = false;
 var lastIntensity = 0;
 var curIntensity = 0;
 var curPos = 0;
@@ -21,8 +20,6 @@ var bVal = 2;
 var breatheMode = true;
 var rainbowMode = true;
 var direction = "up";
-
-
 
 exports.initBoard = function(callback){
     board = new five.Board();
@@ -54,24 +51,23 @@ exports.initBoard = function(callback){
 }
 
 exports.notificationState = function(color){
-    prevState.breatheMode = breatheMode;
-    prevState.rainbowMode = rainbowMode;
-    breatheMode = false;
-    rainbowMode = false;
-    leds.on();
-    leds.intensity(100);
-    leds.color(colorMap.color[color]);
-    leds.strobe(500);
+    if (!nightMode) {
+        prevState.breatheMode = breatheMode;
+        prevState.rainbowMode = rainbowMode;
+        breatheMode = false;
+        rainbowMode = false;
+        leds.on();
+        leds.intensity(100);
+        leds.color(colorMap.color[color]);
+        leds.strobe(500);
+    }
 };
 
 exports.idleState = function(){
-     breatheMode = prevState.breatheMode;
+    breatheMode = prevState.breatheMode;
     rainbowMode = prevState.rainBowMode;
-    if (nightMode === true) {
-        console.log('sleepy time.. ZZZzzz..');
-        leds.stop().off();
-    } else {
-        leds.stop();
+    leds.stop();
+    if (!nightMode) {
         if (breatheMode) {
             leds.intensity(curIntensity);
         } else {
@@ -82,7 +78,7 @@ exports.idleState = function(){
 };
 
 var breathe = function(){
-    if (lastIntensity === 20) {
+    if (lastIntensity >= bVal) {
         direction = "down";
     } else if (lastIntensity === 0) {
         direction = "up";
@@ -109,9 +105,8 @@ var rainbow = function(){
 };
 
 exports.SetNightMode = function(nightModeSetting){
-    nightModeOveride = !nightModeSetting;
+    nightMode = nightModeSetting;
     if(nightModeSetting){
-        leds.stop().off();
         console.log('Nightmode On Received');
     } else {
         leds.on();

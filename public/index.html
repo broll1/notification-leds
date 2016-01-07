@@ -34,7 +34,7 @@
             <div ng-controller="ArduController">
                     <p>BREATHE MODE: <button type="button" class="btn btn-default" id="breatheMode" ng-click="toggleBreatheMode()">OFF</button></p>
                     <p>RAINBOW MODE: <button type="button" class="btn btn-default" id="rainbowMode" ng-click="toggleRainbowMode()">OFF</button></p>
-                    <p>NIGHT MODE: <button type="button" class="btn btn-default" id="nightMode" ng-click="toggleNightMode()">ON</button></p>
+                    <p>NIGHT MODE: <button type="button" class="btn btn-default" id="nightMode" ng-click="toggleNightMode()">OFF</button></p>
                     <div>BRIGHTNESS: <div id="bVal">2</div>
                     <input class="slider" type="range" name="slider" id="bSlider" value="2" min="0" max="100" />
                     </div>
@@ -58,12 +58,12 @@
 
                     $scope.toggleNightMode = function() {
                         if (nightModeFlag) {
-                            document.getElementById("nightMode").innerHTML = "OFF";
-                            mySocket.emit('nightMode:off');
-                            nightModeFlag = false;
-                        } else {
                             document.getElementById("nightMode").innerHTML = "ON";
                             mySocket.emit('nightMode:on');
+                            nightModeFlag = false;
+                        } else {
+                            document.getElementById("nightMode").innerHTML = "OFF";
+                            mySocket.emit('nightMode:off');
                             nightModeFlag = true;
                         }
                     };

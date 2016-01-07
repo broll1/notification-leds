@@ -1,4 +1,8 @@
 node_modules/
 bower_components/
+to_be_discarded/
+\\
+
+*.log
 
 keys.js

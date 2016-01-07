@@ -1,20 +1,18 @@
 var io;
 var five;
 
-
 exports.InitSocket = function(httpServer, initFive){
- five = initFive;
+    five = initFive;
     io = require('socket.io')(httpServer);
     
-      io.on('connection', function (socket) {
+    io.on('connection', function (socket) {
 
         socket.on('nightMode:on', function(data) {
             five.SetNightMode(true);
         });
 
         socket.on('nightMode:off', function(data) {
-           five.SetNightMode(false);
-            
+            five.SetNightMode(false);
         });
 
         socket.on('breatheMode:on', function(data) {
@@ -22,11 +20,11 @@ exports.InitSocket = function(httpServer, initFive){
         });
 
         socket.on('breatheMode:off', function(data) {
-           five.SetBreatheMode(false);
+            five.SetBreatheMode(false);
         });
 
         socket.on('rainbowMode:on', function(data) {
-           five.SetRainbowMode(true);
+            five.SetRainbowMode(true);
         });
 
         socket.on('rainbowMode:off', function(data) {
@@ -34,7 +32,7 @@ exports.InitSocket = function(httpServer, initFive){
         });
         
         socket.on('bSlider', function(data) {
-           five.SetIntensity(data);
+            five.SetIntensity(data);
         });
 
         socket.on('colorUpdate', function(data) {
@@ -47,5 +45,4 @@ exports.InitSocket = function(httpServer, initFive){
             console.log(err.stack);
         });
     });
-    
 }
