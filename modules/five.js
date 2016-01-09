@@ -1,9 +1,14 @@
 var five = require('johnny-five');
+var beanio = require("bean-io");
 var colorMap = require('./led-colors.js');
 var pixel = require("node-pixel");
 
 var rgbLED = require('../hardware/rgb.js');
 var neoPixel = require('../hardware/neopixel.js');
+var boardIO = new beanio.Board({
+//    name: "ZAPP" // optional: you can specify a localName otherwise defaults to nearby bean
+});
+
 
 
 var leds;
@@ -27,11 +32,19 @@ var direction = "up";
 
 var pixelStrip;
 var button;
-var toggleSwitch
+var toggleSwitch;
+var io;
 
 exports.initBoard = function(callback){
-    board = new five.Board();
+    board = new five.Board({
+        io: boardIO
+    });
     board.on("ready", function() {
+        console.log(io);
+        boardIO.connectedBean.setColor(new Buffer([0, 64, 64]), function(err){
+                console.log('set color on', err);
+        });
+
         leds = new five.Led.RGB(rgbLED);
         button = new five.Button(4); //the number is the pin
         toggleSwitch = new five.Switch(8); //initiate a toggle switch
