@@ -2,8 +2,6 @@ var five = require('johnny-five');
 var colorMap = require('./led-colors.js');
 var pixel = require("node-pixel");
 
-var rgbLED = require('../hardware/rgb.js');
-var neoPixel = require('../hardware/neopixel.js');
 
 
 var leds;
@@ -25,24 +23,20 @@ var breatheMode = true;
 var rainbowMode = true;
 var direction = "up";
 
-var pixelStrip;
-var button;
-var toggleSwitch;
 
 exports.initBoard = function(callback){
     board = new five.Board();
     board.on("ready", function() {
-        leds = new five.Led.RGB(rgbLED);
-        button = new five.Button(4); //the number is the pin
-        toggleSwitch = new five.Switch(8); //initiate a toggle switch
-        pixelStrip = new pixel.Strip(neoPixel);
-        pixelStrip.on("ready",function(){
-            
-        });
+        leds = new five.Led.RGB({ pins: {
+        red: 11,
+        green: 5,
+        blue:3,
+        }
+    });
+    
     console.log(leds);
     this.repl.inject({
        leds: leds, 
-       button: button,
     });
     
     leds.on();
