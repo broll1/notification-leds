@@ -28,15 +28,10 @@ var direction = "up";
 var pixelStrip;
 var button;
 var toggleSwitch;
-var io;
 
 exports.initBoard = function(callback){
-    board = new five.Board({
-        io: boardIO
-    });
+    board = new five.Board();
     board.on("ready", function() {
-        console.log(io);
-
         leds = new five.Led.RGB(rgbLED);
         button = new five.Button(4); //the number is the pin
         toggleSwitch = new five.Switch(8); //initiate a toggle switch
