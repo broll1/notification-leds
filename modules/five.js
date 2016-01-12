@@ -1,7 +1,5 @@
 var five = require('johnny-five');
 var colorMap = require('./led-colors.js');
-var pixel = require("node-pixel");
-
 
 
 var leds;
@@ -23,17 +21,16 @@ var breatheMode = true;
 var rainbowMode = true;
 var direction = "up";
 
-
 exports.initBoard = function(callback){
     board = new five.Board();
     board.on("ready", function() {
-        leds = new five.Led.RGB({ pins: {
-        red: 11,
-        green: 5,
-        blue:3,
+        leds = new five.Led.RGB({
+        pins: {
+            red : 3,
+            green: 5,
+            blue: 6,
         }
     });
-    
     console.log(leds);
     this.repl.inject({
        leds: leds, 
