@@ -14,6 +14,11 @@
     "johnny-five": "^0.9.17",
     "pushbullet": "^1.4.3",
     "socket.io": "^1.3.7",
-    "time": "*"
-  }
+    "node-pixel" : "*",
+    "say" : "*"
+  },
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/flickdm/notification-leds.git"
+}
 }
