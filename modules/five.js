@@ -4,6 +4,7 @@ var colorMap = require('./led-colors.js');
 
 var leds;
 var board;
+var toggle;
 
 var prevState = {
     breatheMode : false,
@@ -24,6 +25,7 @@ var direction = "up";
 exports.initBoard = function(callback){
     board = new five.Board();
     board.on("ready", function() {
+        toggle = new five.Switch(7);
         leds = new five.Led.RGB({
         pins: {
             red : 3,
@@ -34,6 +36,15 @@ exports.initBoard = function(callback){
     console.log(leds);
     this.repl.inject({
        leds: leds, 
+       toggleSwitch: toggle,
+    });
+    
+    toggle.on("close", function(){
+        console.log("notifications enabled. Silent Mode Off");
+    });
+    
+    toggle.on("open", function(){
+        console.log("notifications disabled. Silent Mode on");
     });
     
     leds.on();
