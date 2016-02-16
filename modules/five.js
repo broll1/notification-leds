@@ -1,11 +1,12 @@
 var five = require('johnny-five');
 var colorMap = require('./led-colors.js');
+var hardwareSupport = require('../config/hardware.js');
 
 
 var leds;
 var board;
 var toggle;
-
+var silentMode = false;
 var prevState = {
     breatheMode : false,
     rainbowMode : false,
@@ -25,7 +26,23 @@ var direction = "up";
 exports.initBoard = function(callback){
     board = new five.Board();
     board.on("ready", function() {
-        toggle = new five.Switch(7);
+        if(hardwareSupport.toggle_enabled){
+           toggle = new five.Switch(8);
+           silentMode = !toggle.isClosed;
+           
+           toggle.on("close", function(){
+                console.log("notifications enabled. Silent Mode Off");
+                silentMode = false;
+                leds.on();
+            });
+            
+            toggle.on("open", function(){
+                console.log("notifications disabled. Silent Mode on");
+                silentMode = true;
+                leds.off();
+            });
+        }
+
         leds = new five.Led.RGB({
         pins: {
             red : 3,
@@ -35,19 +52,11 @@ exports.initBoard = function(callback){
     });
     console.log(leds);
     this.repl.inject({
-       leds: leds, 
-       toggleSwitch: toggle,
+       leds: leds,
     });
     
-    toggle.on("close", function(){
-        console.log("notifications enabled. Silent Mode Off");
-    });
-    
-    toggle.on("open", function(){
-        console.log("notifications disabled. Silent Mode on");
-    });
-    
-    leds.on();
+    if(!silentMode){
+        leds.on();
     leds.color(colorMap.color['green']);
     setInterval(function() {
         if (breatheMode) {
@@ -56,6 +65,7 @@ exports.initBoard = function(callback){
             rainbow(leds);
         }
     }, 90);
+    }  
     callback();
     });
   
