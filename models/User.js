@@ -5,13 +5,25 @@ var mongoose = require('mongoose');
 var userSchema = new mongoose.Schema({
   email: { type: String, unique: true, lowercase: true },
   password: String,
-  
-  tokens: Array,
-
   profile: {
     name: { type: String, default: '' },
     picture: { type: String, default: '' }
   },
+  dashboard: {
+      color: {type: String, default: ''},
+      intensity: {type: Number, default: 100},
+      mode: {type: String, default: 'Breathe'},
+      autoSilence: {type: Boolean, default: false},
+      autoSilenceSchedule: {
+          startTime: {type: String, default: ''},
+          endTime: {type: String, default: ''}
+      },
+      notificationTypesEnabled: {
+          phoneCalls: {type: Boolean, default: true},
+          sms: {type: Boolean, default: true},
+          mirrors: {type: Boolean, default: true}
+      }
+  }
 });
 
 /**
