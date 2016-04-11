@@ -1,19 +1,21 @@
 var PushBullet = require('pushbullet');
 var keys = require('../../config/secrets.js')
-var five = require('../../main').johhnyBoard;
+var five;
 
 
 
-exports.InitPushBullet = function(){
+exports.InitPushBullet = function(fiveBoard){
+    five = fiveBoard;
     pusher = new PushBullet(keys.pushbulletKey);
     var stream = pusher.stream();
     stream.connect();
     stream.on('connect', function() {
         five.idleState(); 
-        console.log('connected');
+        console.log('connectedpushbull');
     });
     
      stream.on('push', function(push) {
+         console.log(push.type);
         switch(push.type) {
             case 'sms_changed':
                     if (push.notifications.length != 0) {
@@ -51,7 +53,5 @@ exports.InitPushBullet = function(){
 
     stream.on('error', function() {
         five.SetError();
-    });
-    
-    
+    });   
 }
