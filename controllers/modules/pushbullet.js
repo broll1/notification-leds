@@ -1,12 +1,11 @@
 var PushBullet = require('pushbullet');
 var keys = require('../../config/secrets.js')
-var five;
+var five = require('../../main').johhnyBoard;
 
 
 
-exports.InitPushBullet = function(initFive){
-     five = initFive;
-    pusher = new PushBullet(keys.pushbullet_key);
+exports.InitPushBullet = function(){
+    pusher = new PushBullet(keys.pushbulletKey);
     var stream = pusher.stream();
     stream.connect();
     stream.on('connect', function() {

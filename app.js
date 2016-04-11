@@ -38,7 +38,8 @@ var passportConf = require('./config/passport');
 /**
  * Pushbullet, weather, and johnny-five modules
  */
-
+var johnnyFive = require('./controllers/modules/five.js');
+var pushBullet = require('./controllers/modules/pushbullet.js');
 
 /**
  * Create Express server.
@@ -129,10 +130,12 @@ app.use(function (err, req, res, next) {
 /**
  * Start Express server.
  */
-// Init the led controller, as well as pushbullet/weather if the keys arent null.
-
-app.listen(app.get('port'), function() {
-  console.log('Express server listening on port %d in %s mode', app.get('port'), app.get('env'));
+johnnyFive.initBoard(function callback(){
+    pushBullet.InitPushBullet();
+    app.listen(app.get('port'), function() {
+    console.log('Express server listening on port %d in %s mode', app.get('port'), app.get('env'));
+    });
 });
 
 module.exports = app;
+exports.johhnyBoard = johnnyFive;
