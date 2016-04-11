@@ -1,0 +1,47 @@
+{
+  "name": "notification-leds",
+  "version": "0.2.0",
+  "description": "A dashboard and service for managing johnny-five powered automated lights",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flickdm/notification-leds"
+  },
+  "scripts": {
+    "start": "node app.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "async": "^0.9.0",
+    "bcrypt-nodejs": "^0.0.3",
+    "body-parser": "^1.12.2",
+    "cheerio": "^0.19.0",
+    "compression": "^1.4.3",
+    "connect-assets": "^4.7.0",
+    "connect-mongo": "^0.8.0",
+    "cookie-parser": "^1.3.4",
+    "csso": "^1.3.11",
+    "csurf": "^1.7.0",
+    "errorhandler": "^1.3.5",
+    "express": "^4.12.3",
+    "express-flash": "^0.0.2",
+    "express-handlebars": "^2.0.0",
+    "express-session": "^1.10.4",
+    "express-validator": "^2.9.0",
+    "hbs": "^3.0.1",
+    "less": "^2.4.0",
+    "method-override": "^2.3.2",
+    "mongoose": "^4.0.1",
+    "morgan": "^1.5.2",
+    "multer": "^0.1.8",
+    "passport": "^0.2.1",
+    "passport-local": "^1.0.0",
+    "request": "^2.54.0",
+    "uglify-js": "^2.4.19",
+    "validator": "^3.36.0",
+    "yui": "^3.18.1",
+    "forecast": "^0.2.1",
+    "johnny-five": "^0.9.39",
+    "pushbullet": "^1.4.3"
+  }
+}

@@ -1,0 +1,42 @@
+<div class="row">
+  <div class="col-sm-6">
+    <h2>Lighting Control</h2>
+   <form><input hidden="hidden" type="text" id="color" name="color" value="#123456" /></form>
+    <div align="center" id="colorpicker"></div>
+    <h4 id="range">Intensity:</h4>
+    <input id="rangeBar" type="range" min="0" max="100" onchange="showValue(this.value)" />
+  </div>
+ 
+  <div class="col-sm-6">
+    <h2>Mode</h2>
+    <input type="radio" name="mode" value="breathe" /> Breathe Mode<br />
+    <input type="radio" name="mode" value="rainbow" /> Rainbow Mode<br />
+    <input type="radio" name="mode" value="mood" /> Mood Lighting Mode<br />
+    <input type="radio" name="mode" value="silent" /> Silent Mode<br />
+  </div>
+ 
+  <div class="col-sm-6">
+    <h2>Automatic Notification Silencing</h2>
+    <p>Enabling this setting will allow you to silence notifications during a period of time</p>
+    <input type="checkbox" id="enableAutoSilence" name="enableAutoSilence" onclick="setVisibility()"> Enable Auto Silence
+    <div id="timesBox" hidden="hidden">
+        <div>
+            <label for="startTime" class="control-label">Start Time: </label>
+            <input type="text" name="startTime" id="startTime"/>
+        </div>
+        <div>
+            <label for="endTime" class="control-label">End Time: </label>
+            <input type="text" name="endTime" id="endTime"/>
+        </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <h2>Enable/Disable Specific Notification Types</h2>
+    <input type="checkbox" id="callchk" value="Calls" /> Phone Calls<br />
+    <input type="checkbox" id="smschk" value="SMS" /> SMS<br />
+    <input type="checkbox" id="mirrorchk" value="Mirrors" /> Mirrors (Timers, other apps)<br />
+  </div>
+   <div class="col-sm-offset-3 col-sm-7">
+      <div align="right"><p><a role="button" class="btn btn-success">Apply</a></p></div>
+   </div>
+</div>
