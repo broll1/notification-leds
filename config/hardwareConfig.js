@@ -20,7 +20,7 @@
  */
 
 module.exports = {
-    redpin: 5,
-    greenpin: 6,
-    bluepin: 7,
+    redpin: 3,
+    greenpin: 5,
+    bluepin: 6,
 };
